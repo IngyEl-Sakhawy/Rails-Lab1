@@ -1,13 +1,35 @@
+<nav>
+  <ul>
+    <li><%= link_to "Home", root_path %></li>
+    <% if user_signed_in? %>
+      <li>
+    <%= form_tag destroy_user_session_path, method: :delete do %>
+      <%= submit_tag "Logout", class: "link-btn" %>
+    <% end %>
+  </li>
+    <% else %>
+      <li><%= link_to "Sign In", new_user_session_path %></li>
+    <% end %>
+  </ul>
+</nav>
 <h1><%= @article.title %></h1>
 
 <p><%= @article.body %></p>
 
+
+<% if @article.image.present? %>
+  <%= image_tag @article.image %>
+<% end %>
+
+
 <ul>
-  <li><%= link_to "Edit", edit_article_path(@article) %></li>
-  <li><%= link_to "Destroy", article_path(@article), data: {
-                    turbo_method: :delete,
-                    turbo_confirm: "Are you sure?"
-                  } %></li>
+  <% if can? :manage, @article %>
+    <li><%= link_to "Edit", edit_article_path(@article) %></li>
+    <li><%= link_to "Destroy", article_path(@article), data: {
+                      turbo_method: :delete,
+                      turbo_confirm: "Are you sure?"
+                    } %></li>
+  <% end %>
 </ul>
 
 <h2>Comments</h2>
